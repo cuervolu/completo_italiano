@@ -4,25 +4,83 @@ import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
+/// Table for storing story information
+/// Stories are the top-level organizational units
+@TableIndex(name: 'index_stories_title', unique: true, columns: {#title})
+class Stories extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get title => text().withLength(min: 1, max: 100)();
+  TextColumn get description => text().nullable()();
+  TextColumn get genre => text().nullable()(); // Fantasy, Sci-Fi, etc.
+  TextColumn get setting => text().nullable()(); // World/universe details
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
 /// Table for storing character information
 /// Characters are the main entities in the app
 @TableIndex(name: 'index_characters_name', unique: true, columns: {#name})
+@TableIndex(name: 'index_characters_story', columns: {#storyId})
+@TableIndex(name: 'index_characters_category', columns: {#categoryId})
+@TableIndex(name: 'index_characters_favorite', columns: {#isFavorite})
 class Characters extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  TextColumn get description => text()();
+  IntColumn get storyId =>
+      integer().references(Stories, #id)(); // Link to story
   IntColumn get categoryId =>
       integer().nullable().references(Categories, #id)();
+
+  // Basic info
+  TextColumn get description => text()();
+  TextColumn get role =>
+      text().nullable()(); // Protagonist, Antagonist, Supporting, etc.
+  TextColumn get age => text().nullable()();
+  DateTimeColumn get birthDate => dateTime().nullable()();
+  TextColumn get race => text().nullable()(); // Human, Elf, etc. for fantasy
+
+  // Detailed character aspects
   TextColumn get personality => text().nullable()();
   TextColumn get background => text().nullable()();
   TextColumn get appearance => text().nullable()();
+  TextColumn get speechPattern =>
+      text().nullable()(); // How the character talks
+  TextColumn get dreams => text().nullable()(); // Aspirations, goals
+  TextColumn get fears => text().nullable()(); // What scares them
+
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().nullable()();
 }
 
+/// Table for storing family relationships between characters
+@TableIndex(name: 'index_relationship_character', columns: {#characterId})
+@TableIndex(name: 'index_relationship_related', columns: {#relatedCharacterId})
+@TableIndex(name: 'index_relationship_both', columns: {#characterId, #relatedCharacterId})
+class CharacterRelationships extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get characterId => integer().references(Characters, #id)();
+  IntColumn get relatedCharacterId => integer().references(Characters, #id)();
+  TextColumn get relationshipType => text()(); // Parent, Child, Sibling, etc.
+  TextColumn get description => text().nullable()(); // Additional details
+}
+
+/// Table for storing character development/arc over time
+@TableIndex(name: 'index_development_character', columns: {#characterId})
+@TableIndex(name: 'index_development_order', columns: {#characterId, #stageOrder})
+class CharacterDevelopment extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get characterId => integer().references(Characters, #id)();
+  TextColumn get stageTitle => text().withLength(min: 1, max: 100)();
+  TextColumn get description => text()();
+  IntColumn get stageOrder =>
+      integer().withDefault(const Constant(0))(); // For ordering
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
 /// Table for storing categories to organize characters
 /// Each character can belong to one category
+@TableIndex(name: 'index_categories_name', unique: true, columns: {#name})
 class Categories extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 1, max: 50)();
@@ -32,6 +90,8 @@ class Categories extends Table {
 
 /// Table for storing character images
 /// Each character can have multiple images in their gallery
+@TableIndex(name: 'index_images_character', columns: {#characterId})
+@TableIndex(name: 'index_images_main', columns: {#characterId, #isMainImage})
 class CharacterImages extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get characterId => integer().references(Characters, #id)();
@@ -43,6 +103,7 @@ class CharacterImages extends Table {
 
 /// Table for storing character concepts and sketches
 /// Contains ideas and drafts related to a character
+@TableIndex(name: 'index_concepts_character', columns: {#characterId})
 class Concepts extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get characterId => integer().references(Characters, #id)();
@@ -54,6 +115,9 @@ class Concepts extends Table {
 
 /// Table for storing opinions between characters
 /// Represents what one character thinks about another
+@TableIndex(name: 'index_opinions_character', columns: {#characterId})
+@TableIndex(name: 'index_opinions_about', columns: {#aboutCharacterId})
+@TableIndex(name: 'index_opinions_relationship', columns: {#characterId, #aboutCharacterId})
 class Opinions extends Table {
   IntColumn get id => integer().autoIncrement()();
 
@@ -73,7 +137,16 @@ class Opinions extends Table {
 }
 
 @DriftDatabase(
-  tables: [Characters, Categories, CharacterImages, Concepts, Opinions],
+  tables: [
+    Stories,
+    Characters,
+    Categories,
+    CharacterImages,
+    Concepts,
+    Opinions,
+    CharacterRelationships,
+    CharacterDevelopment,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
@@ -81,7 +154,84 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  // Story methods
+  Future<List<Story>> getAllStories() => select(stories).get();
+
+  Future<Story?> getStoryById(int id) {
+    return (select(stories)
+      ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<int> insertStory(StoriesCompanion data) {
+    return into(stories).insert(data);
+  }
+
+  Future<bool> updateStory(StoriesCompanion data) {
+    return update(stories).replace(data);
+  }
+
+  Future<int> deleteStory(int id) {
+    return (delete(stories)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  // Character relationship methods
+  Future<List<CharacterRelationship>> getRelationshipsByCharacterId(
+    int characterId,
+  ) {
+    return (select(characterRelationships)
+      ..where((tbl) => tbl.characterId.equals(characterId))).get();
+  }
+
+  Future<List<CharacterRelationship>> getRelationshipsWithCharacterId(
+    int characterId,
+  ) {
+    return (select(characterRelationships)
+      ..where((tbl) => tbl.relatedCharacterId.equals(characterId))).get();
+  }
+
+  Future<int> insertRelationship(CharacterRelationshipsCompanion data) {
+    return into(characterRelationships).insert(data);
+  }
+
+  Future<bool> updateRelationship(CharacterRelationshipsCompanion data) {
+    return update(characterRelationships).replace(data);
+  }
+
+  Future<int> deleteRelationship(int id) {
+    return (delete(characterRelationships)
+      ..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  // Character development methods
+  Future<List<CharacterDevelopmentData>> getDevelopmentByCharacterId(
+    int characterId,
+  ) {
+    return (select(characterDevelopment)
+          ..where((tbl) => tbl.characterId.equals(characterId))
+          ..orderBy([(t) => OrderingTerm(expression: t.stageOrder)]))
+        .get();
+  }
+
+  Future<int> insertDevelopment(CharacterDevelopmentCompanion data) {
+    return into(characterDevelopment).insert(data);
+  }
+
+  Future<bool> updateDevelopment(CharacterDevelopmentCompanion data) {
+    return update(characterDevelopment).replace(data);
+  }
+
+  Future<int> deleteDevelopment(int id) {
+    return (delete(characterDevelopment)
+      ..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  // Existing methods, updated for the new schema
   Future<List<Character>> getAllCharacters() => select(characters).get();
+
+  Future<List<Character>> getCharactersByStory(int storyId) {
+    return (select(characters)
+      ..where((tbl) => tbl.storyId.equals(storyId))).get();
+  }
 
   Future<Character?> getCharacterById(int id) {
     return (select(characters)
@@ -101,6 +251,12 @@ class AppDatabase extends _$AppDatabase {
   Future<List<Character>> searchCharacters(String query) {
     return (select(characters)
       ..where((tbl) => tbl.name.like('%$query%'))).get();
+  }
+
+  Future<List<Character>> searchCharactersByStory(String query, int storyId) {
+    return (select(characters)..where(
+      (tbl) => tbl.name.like('%$query%') & tbl.storyId.equals(storyId),
+    )).get();
   }
 
   Future<int> insertCharacter(CharactersCompanion data) {
