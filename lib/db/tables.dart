@@ -200,7 +200,8 @@ class AppSettings extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get defaultBackgroundImage => text().nullable()();
   TextColumn get themeColor => text().nullable()();
-  TextColumn get fontStyle => text().nullable()();
+  TextColumn get fontStyle => text().nullable()(); // 'nunito', 'roboto', etc.
+  TextColumn get themeMode => text().nullable()(); // 'light', 'dark', 'system'
   IntColumn get lastOpenedStoryId => integer().nullable()();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }

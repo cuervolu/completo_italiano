@@ -1,4 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+enum AppFont {
+  nunito,
+  quicksand,
+  poppins,
+  lato,
+  montserrat,
+  playfair,
+  comfortaa,
+  pacifico,
+}
+
+extension AppFontExtension on AppFont {
+  String get displayName {
+    switch (this) {
+      case AppFont.nunito:
+        return 'Nunito';
+      case AppFont.quicksand:
+        return 'Quicksand';
+      case AppFont.poppins:
+        return 'Poppins';
+      case AppFont.lato:
+        return 'Lato';
+      case AppFont.montserrat:
+        return 'Montserrat';
+      case AppFont.playfair:
+        return 'Playfair Display';
+      case AppFont.comfortaa:
+        return 'Comfortaa';
+      case AppFont.pacifico:
+        return 'Pacifico';
+    }
+  }
+
+  TextTheme getGoogleFontTextTheme(Brightness brightness) {
+    final TextTheme baseTheme =
+        brightness == Brightness.light
+            ? ThemeData.light().textTheme
+            : ThemeData.dark().textTheme;
+
+    final Color textColor =
+        brightness == Brightness.light ? Colors.black87 : Colors.white;
+
+    switch (this) {
+      case AppFont.nunito:
+        return GoogleFonts.nunitoTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.quicksand:
+        return GoogleFonts.quicksandTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.poppins:
+        return GoogleFonts.poppinsTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.lato:
+        return GoogleFonts.latoTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.montserrat:
+        return GoogleFonts.montserratTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.playfair:
+        return GoogleFonts.playfairDisplayTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.comfortaa:
+        return GoogleFonts.comfortaaTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+      case AppFont.pacifico:
+        return GoogleFonts.pacificoTextTheme(
+          baseTheme,
+        ).apply(bodyColor: textColor, displayColor: textColor);
+    }
+  }
+}
 
 class AppTheme {
   // LIGHT THEME
@@ -8,20 +88,21 @@ class AppTheme {
   static const Color _lightBackgroundColor = Color(0xFFFFF7F3);
 
   // DARK THEME
-  static const Color _darkPrimaryColor = Color(0xFF756AB6);
-  static const Color _darkSecondaryColor = Color(0xFFAC87C5);
-  static const Color _darkTertiaryColor = Color(0xFFE0AED0);
-  static const Color _darkBackgroundColor = Color(0xFFFFE5E5);
+  static const Color _darkPrimaryColor = Color(0xFF39375B);
+  static const Color _darkSecondaryColor = Color(0xFF745C97);
+  static const Color _darkTertiaryColor = Color(0xFFD597CE);
+  static const Color _darkBackgroundColor = Color(0xFFF5B0CB);
 
-  static ThemeData get lightTheme {
+  static ThemeData lightTheme({AppFont font = AppFont.nunito}) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: _lightPrimaryColor,
         secondary: _lightSecondaryColor,
         tertiary: _lightTertiaryColor,
         surface: _lightBackgroundColor,
+        background: _lightBackgroundColor,
       ),
       scaffoldBackgroundColor: _lightBackgroundColor,
       appBarTheme: const AppBarTheme(
@@ -35,28 +116,29 @@ class AppTheme {
           foregroundColor: Colors.white,
         ),
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Colors.black87),
-        displayMedium: TextStyle(color: Colors.black87),
-        displaySmall: TextStyle(color: Colors.black87),
-        headlineMedium: TextStyle(color: Colors.black87),
-        headlineSmall: TextStyle(color: Colors.black87),
-        titleLarge: TextStyle(color: Colors.black87),
-        bodyLarge: TextStyle(color: Colors.black87),
-        bodyMedium: TextStyle(color: Colors.black87),
+      cardTheme: CardTheme(
+        color: _lightBackgroundColor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: _lightPrimaryColor,
+        foregroundColor: Colors.white,
+      ),
+      textTheme: font.getGoogleFontTextTheme(Brightness.light),
     );
   }
 
-  static ThemeData get darkTheme {
+  static ThemeData darkTheme({AppFont font = AppFont.nunito}) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: _darkPrimaryColor,
         secondary: _darkSecondaryColor,
         tertiary: _darkTertiaryColor,
         surface: _darkBackgroundColor,
+        background: _darkBackgroundColor,
       ),
       scaffoldBackgroundColor: _darkBackgroundColor,
       appBarTheme: const AppBarTheme(
@@ -70,16 +152,16 @@ class AppTheme {
           foregroundColor: Colors.white,
         ),
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Colors.black87),
-        displayMedium: TextStyle(color: Colors.black87),
-        displaySmall: TextStyle(color: Colors.black87),
-        headlineMedium: TextStyle(color: Colors.black87),
-        headlineSmall: TextStyle(color: Colors.black87),
-        titleLarge: TextStyle(color: Colors.black87),
-        bodyLarge: TextStyle(color: Colors.black87),
-        bodyMedium: TextStyle(color: Colors.black87),
+      cardTheme: CardTheme(
+        color: _darkBackgroundColor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: _darkPrimaryColor,
+        foregroundColor: Colors.white,
+      ),
+      textTheme: font.getGoogleFontTextTheme(Brightness.dark),
     );
   }
 }

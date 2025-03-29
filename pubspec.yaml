@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1
   get_it: ^8.0.3
+  go_router: ^14.8.1
+  google_fonts: ^6.2.1
   logger: ^2.5.0
   path_provider: ^2.1.5
   rename_app: ^1.6.2
