@@ -1,6 +1,6 @@
 import 'package:completo_italiano/config/theme/app_theme.dart';
-import 'package:completo_italiano/db/daos/daos.dart';
-import 'package:completo_italiano/db/database.dart';
+import 'package:completo_italiano/data/db/daos/daos.dart';
+import 'package:completo_italiano/data/db/database.dart';
 import 'package:completo_italiano/providers/database_provider.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';

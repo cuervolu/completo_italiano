@@ -1,4 +1,4 @@
-import 'package:completo_italiano/db/tables.dart';
+import 'package:completo_italiano/data/db/tables.dart';
 import 'package:drift/drift.dart';
 import '../database.dart';
 

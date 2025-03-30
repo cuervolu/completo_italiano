@@ -1,4 +1,4 @@
-import 'package:completo_italiano/db/database.dart';
+import 'package:completo_italiano/data/db/database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
