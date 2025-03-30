@@ -10,6 +10,7 @@ enum AppFont {
   playfair,
   comfortaa,
   pacifico,
+  papyrus,
 }
 
 extension AppFontExtension on AppFont {
@@ -31,6 +32,8 @@ extension AppFontExtension on AppFont {
         return 'Comfortaa';
       case AppFont.pacifico:
         return 'Pacifico';
+      case AppFont.papyrus:
+        return 'Papyrus';
     }
   }
 
@@ -76,6 +79,13 @@ extension AppFontExtension on AppFont {
         return GoogleFonts.pacificoTextTheme(
           baseTheme,
         ).apply(bodyColor: textColor, displayColor: textColor);
+       case AppFont.papyrus:
+        return TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Papyrus', fontSize: 96, fontWeight: FontWeight.w300, color: textColor),
+          displayMedium: TextStyle(fontFamily: 'Papyrus', fontSize: 60, fontWeight: FontWeight.w300, color: textColor),
+          displaySmall: TextStyle(fontFamily: 'Papyrus', fontSize: 48, fontWeight: FontWeight.w400, color: textColor),
+          headlineMedium: TextStyle(fontFamily: 'Papyrus', fontSize: 34, fontWeight: FontWeight.w400, color: textColor),
+        );
     }
   }
 }

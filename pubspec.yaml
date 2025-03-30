@@ -34,5 +34,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Papyrus
+      fonts:
+        - asset: assets/fonts/papyrus.ttf
   assets:
     - assets/icons/
