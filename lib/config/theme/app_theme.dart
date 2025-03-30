@@ -79,12 +79,32 @@ extension AppFontExtension on AppFont {
         return GoogleFonts.pacificoTextTheme(
           baseTheme,
         ).apply(bodyColor: textColor, displayColor: textColor);
-       case AppFont.papyrus:
+      case AppFont.papyrus:
         return TextTheme(
-          displayLarge: TextStyle(fontFamily: 'Papyrus', fontSize: 96, fontWeight: FontWeight.w300, color: textColor),
-          displayMedium: TextStyle(fontFamily: 'Papyrus', fontSize: 60, fontWeight: FontWeight.w300, color: textColor),
-          displaySmall: TextStyle(fontFamily: 'Papyrus', fontSize: 48, fontWeight: FontWeight.w400, color: textColor),
-          headlineMedium: TextStyle(fontFamily: 'Papyrus', fontSize: 34, fontWeight: FontWeight.w400, color: textColor),
+          displayLarge: TextStyle(
+            fontFamily: 'Papyrus',
+            fontSize: 96,
+            fontWeight: FontWeight.w300,
+            color: textColor,
+          ),
+          displayMedium: TextStyle(
+            fontFamily: 'Papyrus',
+            fontSize: 60,
+            fontWeight: FontWeight.w300,
+            color: textColor,
+          ),
+          displaySmall: TextStyle(
+            fontFamily: 'Papyrus',
+            fontSize: 48,
+            fontWeight: FontWeight.w400,
+            color: textColor,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Papyrus',
+            fontSize: 34,
+            fontWeight: FontWeight.w400,
+            color: textColor,
+          ),
         );
     }
   }
@@ -98,10 +118,10 @@ class AppTheme {
   static const Color _lightBackgroundColor = Color(0xFFFFF7F3);
 
   // DARK THEME
-  static const Color _darkPrimaryColor = Color(0xFF39375B);
+  static const Color _darkPrimaryColor = Color(0xFFF5B0CB);
   static const Color _darkSecondaryColor = Color(0xFF745C97);
   static const Color _darkTertiaryColor = Color(0xFFD597CE);
-  static const Color _darkBackgroundColor = Color(0xFFF5B0CB);
+  static const Color _darkBackgroundColor = Color(0xFF39375B);
 
   static ThemeData lightTheme({AppFont font = AppFont.nunito}) {
     return ThemeData(
@@ -112,7 +132,6 @@ class AppTheme {
         secondary: _lightSecondaryColor,
         tertiary: _lightTertiaryColor,
         surface: _lightBackgroundColor,
-        background: _lightBackgroundColor,
       ),
       scaffoldBackgroundColor: _lightBackgroundColor,
       appBarTheme: const AppBarTheme(
@@ -148,7 +167,6 @@ class AppTheme {
         secondary: _darkSecondaryColor,
         tertiary: _darkTertiaryColor,
         surface: _darkBackgroundColor,
-        background: _darkBackgroundColor,
       ),
       scaffoldBackgroundColor: _darkBackgroundColor,
       appBarTheme: const AppBarTheme(
