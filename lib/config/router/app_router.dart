@@ -11,7 +11,6 @@ final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'shell',
 );
 
-// Mapeo de rutas a títulos para mantener consistencia
 Map<String, String> routeTitles = {
   '/': 'Inicio',
   '/stories': 'Historias',
@@ -24,9 +23,7 @@ Map<String, String> routeTitles = {
   '/search': 'Búsqueda',
 };
 
-// Función para obtener título según la ubicación
 String getTitleForLocation(String location) {
-  // Para rutas dinámicas como '/stories/:id'
   if (location.startsWith('/stories/') && !location.endsWith('/new')) {
     return 'Detalles de Historia';
   }
@@ -39,8 +36,11 @@ String getTitleForLocation(String location) {
 
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  debugLogDiagnostics: true,
+  debugLogDiagnostics: false,
   initialLocation: '/',
+  redirect: (context, state) {
+    return null;
+  },
   routes: [
     // Shell Route que aplicará AppShell a todas las rutas hijas
     ShellRoute(
@@ -89,18 +89,29 @@ final appRouter = GoRouter(
             GoRoute(
               path: 'new',
               name: 'new_story',
-              builder:
-                  (context, state) => const Center(
-                    child: Text('Crear Nueva Historia (Pendiente)'),
-                  ),
+              pageBuilder: (context, state) => CustomTransitionPage(
+                key: state.pageKey,
+                child: const Center(
+                  child: Text('Crear Nueva Historia (Pendiente)'),
+                ),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+              ),
             ),
             GoRoute(
               path: ':id',
               name: 'story_detail',
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final storyId = state.pathParameters['id'];
-                return Center(
-                  child: Text('Detalle de Historia $storyId (Pendiente)'),
+                return CustomTransitionPage(
+                  key: state.pageKey,
+                  child: Center(
+                    child: Text('Detalle de Historia $storyId (Pendiente)'),
+                  ),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
                 );
               },
             ),
@@ -118,18 +129,29 @@ final appRouter = GoRouter(
             GoRoute(
               path: 'new',
               name: 'new_character',
-              builder:
-                  (context, state) => const Center(
-                    child: Text('Crear Nuevo Personaje (Pendiente)'),
-                  ),
+              pageBuilder: (context, state) => CustomTransitionPage(
+                key: state.pageKey,
+                child: const Center(
+                  child: Text('Crear Nuevo Personaje (Pendiente)'),
+                ),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+              ),
             ),
             GoRoute(
               path: ':id',
               name: 'character_detail',
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final characterId = state.pathParameters['id'];
-                return Center(
-                  child: Text('Detalle de Personaje $characterId (Pendiente)'),
+                return CustomTransitionPage(
+                  key: state.pageKey,
+                  child: Center(
+                    child: Text('Detalle de Personaje $characterId (Pendiente)'),
+                  ),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
                 );
               },
             ),
@@ -140,36 +162,52 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/favorites',
           name: 'favorites',
-          builder:
-              (context, state) =>
-                  const Center(child: Text('Favoritos (Pendiente)')),
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const Center(child: Text('Favoritos (Pendiente)')),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
         ),
 
         // Papelera
         GoRoute(
           path: '/trash',
           name: 'trash',
-          builder:
-              (context, state) =>
-                  const Center(child: Text('Papelera (Pendiente)')),
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const Center(child: Text('Papelera (Pendiente)')),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
         ),
 
         // Búsqueda
         GoRoute(
           path: '/search',
           name: 'search',
-          builder:
-              (context, state) =>
-                  const Center(child: Text('Búsqueda (Pendiente)')),
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const Center(child: Text('Búsqueda (Pendiente)')),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
         ),
 
         // Configuración
         GoRoute(
           path: '/settings',
           name: 'settings',
-          builder:
-              (context, state) =>
-                  const Center(child: Text('Configuración (Pendiente)')),
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const Center(child: Text('Configuración (Pendiente)')),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
         ),
       ],
     ),

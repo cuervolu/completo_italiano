@@ -22,7 +22,15 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           showBackButton
               ? IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop(),
+                onPressed: () {
+                  // Safer back navigation that checks if we can pop
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If we can't pop, navigate to the home screen
+                    context.go('/');
+                  }
+                },
               )
               : IconButton(
                 icon: const Icon(Icons.menu),
