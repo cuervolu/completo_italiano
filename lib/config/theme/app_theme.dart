@@ -44,7 +44,7 @@ extension AppFontExtension on AppFont {
             : ThemeData.dark().textTheme;
 
     final Color textColor =
-        brightness == Brightness.light ? Colors.black87 : Colors.white;
+        brightness == Brightness.light ? Colors.black87 : Color(0xFFECEFF4);
 
     switch (this) {
       case AppFont.nunito:
@@ -111,17 +111,17 @@ extension AppFontExtension on AppFont {
 }
 
 class AppTheme {
-  // LIGHT THEME
-  static const Color _lightPrimaryColor = Color(0xFFC599B6);
-  static const Color _lightSecondaryColor = Color(0xFFE6B2BA);
-  static const Color _lightTertiaryColor = Color(0xFFFAD0C4);
-  static const Color _lightBackgroundColor = Color(0xFFFFF7F3);
+  static const Color _lightPrimaryColor = Color(0xFFB57BA6);
+  static const Color _lightSecondaryColor = Color(0xFFD98E96);
+  static const Color _lightTertiaryColor = Color(0xFFF4B8C5);
+  static const Color _lightBackgroundColor = Color(0xFFFDF3F0);
+  static const Color _lightSurfaceColor = Color(0xFFFFEDEA);
 
-  // DARK THEME
-  static const Color _darkPrimaryColor = Color(0xFFF5B0CB);
-  static const Color _darkSecondaryColor = Color(0xFF745C97);
-  static const Color _darkTertiaryColor = Color(0xFFD597CE);
-  static const Color _darkBackgroundColor = Color(0xFF39375B);
+  static const Color _darkPrimaryColor = Color(0xFF89B4FA);
+  static const Color _darkSecondaryColor = Color(0xFFF5C2E7);
+  static const Color _darkTertiaryColor = Color(0xFFA6E3A1);
+  static const Color _darkBackgroundColor = Color(0xFF1E1E2E);
+  static const Color _darkSurfaceColor = Color(0xFF3E3E55);
 
   static ThemeData lightTheme({AppFont font = AppFont.nunito}) {
     return ThemeData(
@@ -129,32 +129,48 @@ class AppTheme {
       brightness: Brightness.light,
       colorScheme: const ColorScheme.light(
         primary: _lightPrimaryColor,
+        onPrimary: Colors.white,
         secondary: _lightSecondaryColor,
+        onSecondary: Colors.black87,
         tertiary: _lightTertiaryColor,
-        surface: _lightBackgroundColor,
+        surface: _lightSurfaceColor,
+        onSurface: Colors.black87,
       ),
       scaffoldBackgroundColor: _lightBackgroundColor,
       appBarTheme: const AppBarTheme(
         backgroundColor: _lightPrimaryColor,
         foregroundColor: Colors.white,
-        elevation: 0,
+        elevation: 4,
+        shadowColor: Colors.black26,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: _lightPrimaryColor,
           foregroundColor: Colors.white,
+          shadowColor: Colors.black26,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
       cardTheme: CardTheme(
-        color: _lightBackgroundColor,
-        elevation: 2,
+        color: _lightSurfaceColor,
+        elevation: 4,
+        shadowColor: Colors.black26,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: _lightPrimaryColor,
         foregroundColor: Colors.white,
       ),
-      textTheme: font.getGoogleFontTextTheme(Brightness.light),
+      textTheme: font
+          .getGoogleFontTextTheme(Brightness.light)
+          .copyWith(
+            bodyMedium: TextStyle(color: Colors.black87),
+            bodySmall: TextStyle(color: Colors.black54),
+            headlineLarge: TextStyle(color: Colors.black87),
+            headlineMedium: TextStyle(color: Colors.black87),
+          ),
     );
   }
 
@@ -166,7 +182,7 @@ class AppTheme {
         primary: _darkPrimaryColor,
         secondary: _darkSecondaryColor,
         tertiary: _darkTertiaryColor,
-        surface: _darkBackgroundColor,
+        surface: _darkSurfaceColor,
       ),
       scaffoldBackgroundColor: _darkBackgroundColor,
       appBarTheme: const AppBarTheme(
@@ -181,7 +197,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardTheme(
-        color: _darkBackgroundColor,
+        color: _darkSurfaceColor,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
